@@ -76,31 +76,6 @@
   position: relative;
   overflow: hidden;
   
-  &::before {
-    content: attr(data-prev-score);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  &::after {
-    content: attr(data-score);
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.1);
-  }
 }
 
 @keyframes slide-out {
@@ -123,9 +98,32 @@
   }
 }
 
-.slide-out {
-  animation: slide-out 0.5s ease-in-out;
+.slide {
+  &::before {
+    content: attr(data-prev-score);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.1);
+    animation: slide-out 0.5s ease-in-out forwards;
+  }
+
+  &::after {
+    content: attr(data-score);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.1);
+   animation: slide-in 0.5s ease-in-out forwards;
+  }
 }
-.slide-in {
-  animation: slide-in 0.5s ease-in-out;
-} 

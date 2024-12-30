@@ -38,8 +38,8 @@ function ScoreTable({ xScore, oScore }) {
       </thead>
       <tbody>
         <tr>
-          <td className={`score-cell ${xAnimating ? 'slide-out' : ''}`}>{xScore}</td>
-          <td className={`score-cell ${oAnimating ? 'slide-out' : ''}`}>{oScore}</td>
+          <td data-score={xScore} data-prev-score={prevXScore} className={`score-cell ${xAnimating ? 'slide' : ''}`}>{xScore}</td>
+          <td data-score={oScore} data-prev-score={prevOScore} className={`score-cell ${oAnimating ? 'slide' : ''}`}>{oScore}</td>
         </tr>
       </tbody>
     </table>
