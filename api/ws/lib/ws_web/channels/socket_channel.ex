@@ -5,6 +5,10 @@ defmodule WsWeb.SocketChannel do
     {:ok, socket}
   end
 
+  def handle_in("handshake", %{"token" => token, "payload" => payload}, socket) do
+   IO.puts token
+  end
+
   def handle_in("echo", %{"content" => content}, socket) do
     broadcast(socket, "echo_server", %{"content"=>content})
     {:noreply, socket}

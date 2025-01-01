@@ -6,7 +6,7 @@ defmodule Ws.Application do
   @impl true
   def start(_type, _args) do
     children = [
-   
+
       {DNSCluster, query: Application.get_env(:ws, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Ws.PubSub},
       {Finch, name: Ws.Finch},
