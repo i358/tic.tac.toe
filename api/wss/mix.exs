@@ -3,9 +3,9 @@ defmodule Wss.MixProject do
 
   def project do
     [
-      app: :wss,
+      app: :websocket_server,
       version: "0.1.0",
-      elixir: "~> 1.17",
+      elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -21,14 +21,16 @@ defmodule Wss.MixProject do
 
   defp deps do
     [
-      {:plug_cowboy, "~> 2.7.2"},
-      {:cowboy, "~> 2.7"}
+      {:cowboy, "~> 2.9"},
+      {:plug, "~> 1.13"},
+      {:plug_cowboy, "~> 2.5"},
+      {:jason, "~> 1.4"}  
     ]
   end
 
   defp aliases do
     [
-      server: ["run --no-halt"]
+      server: ["deps.get", "run --no-halt"]
     ]
   end
 end

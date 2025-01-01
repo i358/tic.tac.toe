@@ -6,18 +6,29 @@ defmodule WssApp.Socket do
   end
 
   def websocket_init(state) do
+    WssApp.Util.Registry.register(self())
     {:ok, state}
   end
 
   def websocket_handle({:text, message}, state) do
-    {:reply, {:text, "Echo: #{message}"}, state}
+    case WsApp.Util.Validator.validate_message(message) do
+      {:ok, validated_payload} ->
+        handle_valid_message(validated_payload, state)
+
+      {:error, error_response} ->
+        {:reply, {:text, Jason.encode!(error_response)}, state}
+    end
   end
 
-  def websocket_info(_info, state) do
-    {:ok, state}
+  defp handle_valid_message(%{}, state) do
+    {:reply, {:text, "OK"}, state}
   end
 
-  def websocket_terminate(_reason, _req, _state) do
-    :ok
+  def websocket_info({:broadcast, message}, state) do
+    {:reply, {:text, "Broadcast: #{message}"}, state}
+  end
+
+  def websocket_info(info, state) do
+    {:reply, {:text, "Server message: #{inspect(info)}"}, state}
   end
 end
