@@ -6,11 +6,11 @@ defmodule WsApp.Util.Validator do
     end
   end
 
-  defp validate_payload(%{"event" => "ping"}) do
+  defp validate_payload(%{"e" => "ping"}) do
     {:ok, %{event: "ping", token: nil, payload: nil}}
   end
 
-  defp validate_payload(%{"event" => event, "token" => token, "payload" => payload})
+  defp validate_payload(%{"e" => event, "t" => token, "m" => payload})
     when is_binary(event) and is_binary(token) do
     {:ok, %{event: event, token: token, payload: payload}}
   end
@@ -35,14 +35,14 @@ defmodule WsApp.Util.Validator do
   end
 
   defp check_event_exists(errors, payload) do
-    if not Map.has_key?(payload, "event"), do: ["Missing event field" | errors], else: errors
+    if not Map.has_key?(payload, "e"), do: ["Missing 'e' field" | errors], else: errors
   end
 
-  defp check_event_type(errors, %{"event" => event}) do
+  defp check_event_type(errors, %{"e" => event}) do
     if not is_binary(event), do: ["Event must be a string" | errors], else: errors
   end
   defp check_event_type(errors, _), do: errors
-  defp check_required_fields(errors, %{"event" => "ping"}), do: errors
+  defp check_required_fields(errors, %{"e" => "ping"}), do: errors
   defp check_required_fields(errors, payload) do
     errors
     |> check_token_exists(payload)
@@ -51,14 +51,14 @@ defmodule WsApp.Util.Validator do
   end
 
   defp check_token_exists(errors, payload) do
-    if not Map.has_key?(payload, "token"), do: ["Missing token field" | errors], else: errors
+    if not Map.has_key?(payload, "t"), do: ["Missing 't' field" | errors], else: errors
   end
 
   defp check_payload_exists(errors, payload) do
-    if not Map.has_key?(payload, "payload"), do: ["Missing payload field" | errors], else: errors
+    if not Map.has_key?(payload, "m"), do: ["Missing 'm' field" | errors], else: errors
   end
 
-  defp check_token_type(errors, %{"token" => token}) do
+  defp check_token_type(errors, %{"t" => token}) do
     if not is_binary(token), do: ["Token must be a string" | errors], else: errors
   end
   defp check_token_type(errors, _), do: errors

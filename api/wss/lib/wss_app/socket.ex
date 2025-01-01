@@ -7,7 +7,7 @@ defmodule WssApp.Socket do
 
   def websocket_init(state) do
     WssApp.Util.Registry.register(self())
-    {:reply, {:text, Jason.encode!(%{"event" => "server_hello", "heartbeat_interval" => 4800, "m" => "Connection Established."})}, state}
+    {:reply, {:text, Jason.encode!(%{"e" => "server_hello", "heartbeat_interval" => 4800, "m" => "Connection Established."})}, state}
   end
 
   def websocket_handle({:text, message}, state) do
