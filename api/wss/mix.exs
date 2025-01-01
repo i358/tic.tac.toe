@@ -7,10 +7,10 @@ defmodule Wss.MixProject do
       version: "0.1.0",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
-
 
   def application do
     [
@@ -19,11 +19,16 @@ defmodule Wss.MixProject do
     ]
   end
 
-  
   defp deps do
     [
-    {:plug_cowboy, "~> 2.7.2"},
-    {:cowboy, "~> 2.7"}
+      {:plug_cowboy, "~> 2.7.2"},
+      {:cowboy, "~> 2.7"}
+    ]
+  end
+
+  defp aliases do
+    [
+      server: ["run --no-halt"]
     ]
   end
 end
