@@ -1,3 +1,0 @@
-defmodule Ws do
- 
-end
