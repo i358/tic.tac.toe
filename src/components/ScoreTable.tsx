@@ -5,10 +5,12 @@ interface ScoreTableProps {
   oScore: number;
   prevXScore: number;
   prevOScore: number;
+  setPrevOScore: (score: number) => void;
+  setPrevXScore: (score: number) => void;
   gameEnded: boolean;
 }
 
-function ScoreTable({ xScore, oScore, prevXScore, prevOScore, gameEnded }: ScoreTableProps) {
+function ScoreTable({ xScore, oScore, prevXScore, prevOScore, setPrevOScore, setPrevXScore, gameEnded }: ScoreTableProps) {
   const [xAnimating, setXAnimating] = useState(false);
   const [oAnimating, setOAnimating] = useState(false);
 

@@ -48,7 +48,7 @@ function Game() {
   return (
     <div className="game">
       <div className="status">{status}</div>
-      <ScoreTable xScore={xScore} oScore={oScore} prevXScore={prevXScore} prevOScore={prevOScore} gameEnded={gameEnded} />
+      <ScoreTable xScore={xScore} setPrevXScore={setPrevXScore} setPrevOScore={setPrevOScore} oScore={oScore} prevXScore={prevXScore} prevOScore={prevOScore} gameEnded={gameEnded} />
       <div className="game-board">
         <Board setStatus={setStatus} xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
