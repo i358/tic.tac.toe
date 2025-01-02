@@ -32,7 +32,7 @@ function Board({ xIsNext, squares, onPlay, setStatus }: BoardProps) {
     <div>
       <div className="board">
         {Array(9).fill(null).map((_, i) => {
-          const highlight = winner && winner.line.includes(i);
+          const highlight:any = winner && winner.line.includes(i);
           return (
             <Square 
               key={i} 
