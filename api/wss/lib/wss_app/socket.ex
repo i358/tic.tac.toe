@@ -7,21 +7,30 @@ defmodule WssApp.Socket do
 
   def websocket_init(state) do
     WssApp.Util.Registry.register(self())
-    {:reply, {:text, Jason.encode!(%{"e" => "server_hello", "heartbeat_interval" => 4800, "m" => "Connection Established."})}, state}
+    send_resp(%{"e" => "server_hello", "heartbeat_interval" => 14405, "m" => "Connection Established."}, state)
   end
 
   def websocket_handle({:text, message}, state) do
     case WsApp.Util.Validator.validate_message(message) do
       {:ok, validated_payload} ->
         handle_valid_message(validated_payload, state)
-
-      {:error, error_response} ->
-        {:reply, {:text, Jason.encode!(error_response)}, state}
+      {:error, _} ->
+        close_conn(1002, "Unsupported JSON format.", state)
     end
   end
 
-  defp handle_valid_message(%{}, state) do
-    {:reply, {:text, "OK"}, state}
+  defp handle_valid_message(%{}=payload, state) do
+   IO.puts payload["token"]
+   send_resp(%{"e" => "heartbeat_ack", "m" => nil}, state)
+  end
+
+  defp send_resp(payload, state) do
+    resp = Jason.encode!(payload)
+    {:reply, {:text, resp}, state}
+  end
+
+  defp close_conn(op, m, state) do
+    {:reply, {:close, op, m}, state}
   end
 
   def websocket_info({:broadcast, message}, state) do

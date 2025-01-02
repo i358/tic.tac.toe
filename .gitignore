@@ -10,7 +10,7 @@
 /api/wss/.fetch
 erl_crash.dump
 *.ez
-api/wss/tmp/
+/api/wss/tmp/
 /tmp/
 ws-*.tar
 /priv/static/assets/
@@ -18,3 +18,4 @@ ws-*.tar
 npm-debug.log
 /api/ws_test/
 *.lock
+/dist/
