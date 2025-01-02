@@ -2,11 +2,12 @@ defmodule WssApp.Socket do
   @behaviour :cowboy_websocket
 
   def init(request, _state) do
-    {:cowboy_websocket, request, %{}}
+    {:cowboy_websocket, request, %{client_id: generate_client_id()}}
   end
 
   def websocket_init(state) do
-    WssApp.Util.Registry.register(self())
+    WssApp.Util.Registry.register(state.client_id)
+    WssApp.Util.Registry.broadcast("Client #{state.client_id} connected.")
     send_resp(%{"e" => "server_hello", "heartbeat_interval" => 14405, "m" => "Connection Established."}, state)
   end
 
@@ -29,7 +30,6 @@ defmodule WssApp.Socket do
     end
   end
 
-
   defp send_resp(payload, state) do
     resp = Jason.encode!(payload)
     {:reply, {:text, resp}, state}
@@ -40,10 +40,10 @@ defmodule WssApp.Socket do
   end
 
   def websocket_info({:broadcast, message}, state) do
-    {:reply, {:text, "Broadcast: #{message}"}, state}
+    send_resp(%{"e"=>"broadcast", "m"=>message}, state)
   end
 
-  def websocket_info(info, state) do
-    {:reply, {:text, "Server message: #{inspect(info)}"}, state}
+  defp generate_client_id do
+    :crypto.strong_rand_bytes(8) |> Base.url_encode64()
   end
 end
