@@ -14,7 +14,6 @@ defmodule WsApp.Util.Validator do
   defp validate_payload(payload) do
     errors = []
     |> check_event_exists(payload)
-    |> check_payload_exists(payload)
     |> check_event_type(payload)
 
     if length(errors) > 0 do
@@ -34,9 +33,6 @@ defmodule WsApp.Util.Validator do
     if not Map.has_key?(payload, "e"), do: ["Missing event field" | errors], else: errors
   end
 
-  defp check_payload_exists(errors, payload) do
-    if not Map.has_key?(payload, "m"), do: ["Missing payload field" | errors], else: errors
-  end
 
   defp check_event_type(errors, %{"e" => event}) do
     if not is_binary(event), do: ["Event must be a string" | errors], else: errors
