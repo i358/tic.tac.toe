@@ -12,7 +12,7 @@ clearInterval(try_reconnect)
 ws.onopen = (e) => { 
   console.log('WebSocket connection established');
   ping = setInterval(()=>{
-    ws.send(JSON.stringify({e: "ping"}))
+    ws.send(JSON.stringify({e: "heartbeat"}))
     console.log("sent ping")
   }, 14405)
 }

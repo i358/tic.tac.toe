@@ -19,10 +19,16 @@ defmodule WssApp.Socket do
     end
   end
 
-  defp handle_valid_message(%{}=payload, state) do
-   IO.puts payload["token"]
-   send_resp(%{"e" => "heartbeat_ack", "m" => nil}, state)
+  defp handle_valid_message(%{"e" => e} = _payload, state) do
+    case e do
+      "heartbeat" ->
+        send_resp(%{"e" => "heartbeat_ack", "m" => nil}, state)
+
+      _ ->
+        close_conn(1003, "Unsupported Event type", state)
+    end
   end
+
 
   defp send_resp(payload, state) do
     resp = Jason.encode!(payload)
