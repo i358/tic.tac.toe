@@ -14,7 +14,7 @@ defmodule WssApp.Util.Registry do
   def broadcast(message) do
     Registry.dispatch(__MODULE__, "clients", fn entries ->
       for {pid, _} <- entries do
-        Process.send(pid, {:broadcast, message}, [])
+        Process.send(pid, {:broadcast, Jason.decode!(message)}, [])
       end
     end)
   end
