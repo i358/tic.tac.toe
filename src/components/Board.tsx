@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Square from './Square';
 import { calculateWinner } from '../utils/gameUtils';
+import { WS } from '../utils/websocket';
+let ws:any;
 
 interface BoardProps {
   xIsNext: boolean;
@@ -10,7 +12,20 @@ interface BoardProps {
 }
 
 function Board({ xIsNext, squares, onPlay, setStatus }: BoardProps) {
+  const handleMessage = (m:any) => {
+    console.log(m)
+  }
+  useEffect(()=>{
+    WS.on("message", handleMessage)
+    ws = WS.getWebSocket();
+    return () => {
+      WS.off("message", handleMessage);
+    };
+  }, [])
   function handleClick(i: number) {
+ 
+   //@ts-ignore
+      ws.send(JSON.stringify({e:"heartbeat", "m":i}))
     if (calculateWinner(squares) || squares[i]) {
       return;
     }

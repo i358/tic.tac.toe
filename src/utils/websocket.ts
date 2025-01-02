@@ -72,7 +72,14 @@ class WebSocketManager {
       }
       this.eventListeners.get(event)?.push(listener);
     }
-  
+
+    public off(event: string, listener: Function): void {
+        const listeners = this.eventListeners.get(event);
+        if (listeners) {
+          this.eventListeners.set(event, listeners.filter((l) => l !== listener));
+        }
+      }
+
     public emit(event: string, data: any): void {
       const listeners = this.eventListeners.get(event);
       if (listeners) {
@@ -89,7 +96,7 @@ class WebSocketManager {
       } else {
         this.emit("message", data);
       }
-      console.log(data);
+    
     }
   
     private handleClose(event: CloseEvent): void {
