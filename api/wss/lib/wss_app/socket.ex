@@ -6,8 +6,8 @@ defmodule WssApp.Socket do
   end
 
   def websocket_init(state) do
-    WssApp.Util.Registry.register(state.client_id)
     WssApp.Util.Registry.broadcast("Client #{state.client_id} connected.")
+    WssApp.Util.Registry.register(state.client_id)
     send_resp(%{"e" => "server_hello", "heartbeat_interval" => 14405, "m" => "Connection Established."}, state)
   end
 
