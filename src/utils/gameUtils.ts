@@ -33,3 +33,9 @@ export function resetGame(
     document.querySelector('.game')?.classList.remove('reset-animation');
   }, 1000);
 }
+
+export const asyncTimeout = (ms: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};
