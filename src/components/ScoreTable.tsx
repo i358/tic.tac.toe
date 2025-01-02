@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-function ScoreTable({ xScore, oScore }) {
-  const [prevXScore, setPrevXScore] = useState(xScore);
-  const [prevOScore, setPrevOScore] = useState(oScore);
+interface ScoreTableProps {
+  xScore: number;
+  oScore: number;
+  prevXScore: number;
+  prevOScore: number;
+  gameEnded: boolean;
+}
+
+function ScoreTable({ xScore, oScore, prevXScore, prevOScore, gameEnded }: ScoreTableProps) {
   const [xAnimating, setXAnimating] = useState(false);
   const [oAnimating, setOAnimating] = useState(false);
 
