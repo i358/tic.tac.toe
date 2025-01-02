@@ -14,7 +14,23 @@ interface BoardProps {
 function Board({ xIsNext, squares, onPlay, setStatus }: BoardProps) {
   const handleMessage = (m:any) => {
     console.log(m)
+    let [protocol, event] = m["e"].split(":");
+    if(protocol || event) {
+      if(protocol == "wss"){
+        if(m["t"] == "game"){
+          if(event=="pressed") {
+            let s = m["p"]["s"]
+            if (calculateWinner(squares) || squares[s]) {
+              return;
+            }
+            const nextSquares = squares.slice();
+            nextSquares[s] = xIsNext ? 'X' : 'O';
+            onPlay(nextSquares);
+        }
+      }
+    }
   }
+}
   useEffect(()=>{
     WS.on("message", handleMessage)
     ws = WS.getWebSocket();
@@ -24,8 +40,12 @@ function Board({ xIsNext, squares, onPlay, setStatus }: BoardProps) {
   }, [])
   function handleClick(i: number) {
  
+    let payload = {
+      u:"358",
+      s: i
+    }
    //@ts-ignore
-      ws.send(JSON.stringify({e:"heartbeat", "m":i}))
+      ws.send(JSON.stringify({e:"game:pressed", "m":payload}))
     if (calculateWinner(squares) || squares[i]) {
       return;
     }

@@ -1,22 +1,35 @@
 defmodule WssApp.Socket do
   @behaviour :cowboy_websocket
+  alias WssApp.Util.Registry, as: Registry
 
   def init(request, _state) do
     {:cowboy_websocket, request, %{client_id: generate_client_id()}}
   end
 
   def websocket_init(state) do
-    #WssApp.Util.Registry.unregister_client(state.client_id)
-    WssApp.Util.Registry.broadcast(%{"e"=>"join", "m"=>"##{state.client_id} has joined.", "u"=>state.client_id})
-    IO.puts "Client #{state.client_id} connected."
-    WssApp.Util.Registry.register(state.client_id)
-    send_resp(%{"e" => "server_hello", "heartbeat_interval" => 14405, "m" => "Connection Established."}, state)
+    Registry.unregister_client(state.client_id)
+
+    Registry.broadcast(%{
+      "e" => "wss:join",
+      "m" => "##{state.client_id} has joined.",
+      "p" => %{"u" => state.client_id},
+      "t" => "wss"
+    })
+
+    IO.puts("Client #{state.client_id} connected.")
+    Registry.register(state.client_id)
+
+    send_resp(
+      %{"e" => "server_hello", "t" => nil, "heartbeat_interval" => 14405, "m" => "Connection Established."},
+      state
+    )
   end
 
   def websocket_handle({:text, message}, state) do
     case WsApp.Util.Validator.validate_message(message) do
       {:ok, validated_payload} ->
         handle_valid_message(validated_payload, state)
+
       {:error, _} ->
         close_conn(1002, "Unsupported JSON format.", state)
     end
@@ -27,19 +40,61 @@ defmodule WssApp.Socket do
   end
 
   def terminate(_reason, _req, state) do
-    IO.puts "Client #{state.client_id} disconnected."
-    WssApp.Util.Registry.unregister_client(state.client_id)
-    WssApp.Util.Registry.broadcast(%{"e"=>"left", "m"=>"##{state.client_id} has left.", "u"=>state.client_id})
+    IO.puts("Client #{state.client_id} disconnected.")
+    Registry.unregister_client(state.client_id)
+
+    Registry.broadcast(%{
+      "e" => "wss:left",
+      "m" => "##{state.client_id} has left.",
+      "p" => %{"u" => state.client_id},
+      "t" => "wss"
+    })
   end
 
   defp handle_valid_message(%{"e" => e} = payload, state) do
-    IO.puts "(##{state.client_id}) got a message: #{inspect(payload)}"
+    IO.puts("(##{state.client_id}) got a message: #{inspect(payload)}")
+
     case e do
       "heartbeat" ->
-        send_resp(%{"e" => "heartbeat_ack", "m" => nil}, state)
+        send_resp(%{"e" => "heartbeat_ack", "t" => "wss"}, state)
 
       _ ->
-        close_conn(1003, "Unsupported Event type", state)
+        case String.split(e, ":", parts: 2) do
+          [protocol, event] ->
+            case protocol do
+              "game" ->
+                case event do
+                  "pressed" ->
+                    s = payload["m"]["s"]
+                    u = payload["m"]["u"]
+                    if !s or !u or !is_number(s) do
+                      close_conn(1007, "Unsupported data type or missing \"s\" or \"u\" for \"pressed\" event", state)
+                    else
+                      Registry.broadcast(%{
+                        "e" => "wss:pressed",
+                        "p" => %{
+                          "s" => s,
+                          "u" => u
+                        },
+                      })
+                      send_resp(%{"e"=>"ack", "t"=>"game"}, state)
+                    end
+                  _ ->
+                    close_conn(1002, "Unsupported event", state)
+                end
+
+              "auth" ->
+                case event do
+                  _ -> close_conn(1002, "Unsupported event", state)
+                end
+
+              _ ->
+                close_conn(1002, "Unsupported protocol", state)
+            end
+
+          _ ->
+            close_conn(1007, "Missing Event protocol", state)
+        end
     end
   end
 
