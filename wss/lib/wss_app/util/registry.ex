@@ -7,6 +7,10 @@ defmodule WssApp.Util.Registry do
     Registry.register(__MODULE__, "clients", client_id)
   end
 
+  def unregister_client(client_id) do
+    Registry.unregister_match(__MODULE__, "clients", client_id)
+  end
+
   def broadcast(message) do
     Registry.dispatch(__MODULE__, "clients", fn entries ->
       for {pid, _} <- entries do
