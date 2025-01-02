@@ -45,7 +45,7 @@ function App() {
               <div></div>
               <div></div>
             </div>
-            <p className="loading-text">Connecting to WebSocket...</p>
+            <p className="loading-text">Connecting to Gateway</p>
           </div>
           {showConnectionProblemLink && (
             <a href="https://discord.gg/Nr2zG7rUB7" className="connection-problem-link">

@@ -65,8 +65,8 @@ defmodule WssApp.Socket do
               "game" ->
                 case event do
                   "pressed" ->
-                    s = payload["m"]["s"]
-                    u = payload["m"]["u"]
+                    s = payload["p"]["s"]
+                    u = payload["p"]["u"]
                     if !s or !u or !is_number(s) do
                       close_conn(1007, "Unsupported data type or missing \"s\" or \"u\" for \"pressed\" event", state)
                     else

@@ -47,7 +47,7 @@ function Board({ xIsNext, squares, onPlay, setStatus }: BoardProps) {
       s: i
     }
    //@ts-ignore
-    ws.send(JSON.stringify({e:"game:pressed", "m":payload}))
+    ws.send(JSON.stringify({e:"game:pressed", "p":payload}))
     if (calculateWinner(squares) || squares[i]) {
       return;
     }

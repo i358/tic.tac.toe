@@ -19,3 +19,6 @@ npm-debug.log
 /api/ws_test/
 *.lock
 /dist/
+/api/target/
+*.env
+*.exe
