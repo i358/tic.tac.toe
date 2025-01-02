@@ -76,8 +76,9 @@ defmodule WssApp.Socket do
                           "s" => s,
                           "u" => u
                         },
+                        "t" => "game"
                       })
-                      send_resp(%{"e"=>"ack", "t"=>"game"}, state)
+                      send_resp(%{"e"=>"wss:ack", "t"=>"game"}, state)
                     end
                   _ ->
                     close_conn(1002, "Unsupported event", state)

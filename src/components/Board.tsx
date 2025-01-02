@@ -15,22 +15,24 @@ function Board({ xIsNext, squares, onPlay, setStatus }: BoardProps) {
   const handleMessage = (m:any) => {
     console.log(m)
     let [protocol, event] = m["e"].split(":");
-    if(protocol || event) {
-      if(protocol == "wss"){
-        if(m["t"] == "game"){
-          if(event=="pressed") {
-            let s = m["p"]["s"]
-            if (calculateWinner(squares) || squares[s]) {
-              return;
-            }
-            const nextSquares = squares.slice();
-            nextSquares[s] = xIsNext ? 'X' : 'O';
-            onPlay(nextSquares);
+    if(protocol === "wss") {
+      if(event === "pressed"){
+      let s = m["p"]["s"];
+      let u = m["p"]["u"];
+      if (typeof s === 'number' && typeof u === 'string') {
+        if (calculateWinner(squares) || squares[s]) {
+          return;
         }
+        const nextSquares = squares.slice();
+        nextSquares[s] = xIsNext ? 'X' : 'O';
+        onPlay(nextSquares);
+      } else {
+        console.error("Invalid data received from WebSocket:", m);
       }
     }
+    }
   }
-}
+
   useEffect(()=>{
     WS.on("message", handleMessage)
     ws = WS.getWebSocket();
@@ -38,14 +40,14 @@ function Board({ xIsNext, squares, onPlay, setStatus }: BoardProps) {
       WS.off("message", handleMessage);
     };
   }, [])
+
   function handleClick(i: number) {
- 
     let payload = {
       u:"358",
       s: i
     }
    //@ts-ignore
-      ws.send(JSON.stringify({e:"game:pressed", "m":payload}))
+    ws.send(JSON.stringify({e:"game:pressed", "m":payload}))
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
