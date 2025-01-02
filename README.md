@@ -33,10 +33,6 @@ cd tic-tac-toe
 # Install frontend dependencies
 npm install
 
-# Install Elixir dependencies
-cd src/ws
-mix deps.get
-
 # Build the Rust API
 cd ../api
 cargo build
@@ -49,8 +45,8 @@ cargo build
 npm run dev
 
 # Start the Phoenix WebSocket server
-cd src/ws
-mix phx.server
+cd src/wss
+mix server
 
 # Start the Rust API server
 cd ../api
