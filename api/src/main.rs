@@ -29,7 +29,11 @@ use tokio::net::TcpListener;
 #[tokio::main]
 async fn main() -> Result<()> {
 
-  dotenvy::dotenv()?;
+  match dotenvy::dotenv() {
+    Ok(path) => println!("Loaded .env file from {:?}", path),
+    Err(e) => println!("Failed to load .env file: {:?}", e),
+}
+
 
   let port: u16 = env::var("PORT")?.parse::<u16>()?;
   let addr = SocketAddr::from(([0, 0, 0, 0], port));
