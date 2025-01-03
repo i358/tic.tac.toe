@@ -24,9 +24,6 @@ class WebSocketManager {
       this.clearReconnectInterval();
   
       this.ws.onopen = () => {
-        if (this.timeout > 0) {
-          this.startPing();
-        }
         this.emit("connect", {});
       };
   
