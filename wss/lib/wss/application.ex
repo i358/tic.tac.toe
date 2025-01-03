@@ -5,7 +5,7 @@ defmodule Wss.Application do
     children = [
       {Registry, keys: :duplicate, name: WssApp.Util.Registry},
       {Plug.Cowboy, scheme: :http, plug: nil, options: [
-        port: 4000,
+        port: 80,
         dispatch: dispatch()
       ]}
     ]
