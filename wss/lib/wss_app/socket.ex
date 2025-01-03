@@ -68,7 +68,7 @@ defmodule WssApp.Socket do
                     s = payload["p"]["s"]
                     u = payload["p"]["u"]
                     if !s or !u or !is_number(s) do
-                      close_conn(1007, "Unsupported data type or missing \"s\" or \"u\" for \"pressed\" event", state)
+                      close_conn(1007, "Unsupported data type or missing \"s\" or \"u\" frame for \"pressed\" event", state)
                     else
                       Registry.broadcast(%{
                         "e" => "wss:pressed",
@@ -88,7 +88,18 @@ defmodule WssApp.Socket do
                 case event do
                   _ -> close_conn(1002, "Unsupported event", state)
                 end
-
+              "test" ->
+                case event do
+                  "message" ->
+                    m = payload["p"]["m"]
+                    if(!m) do
+                    close_conn(1002, "Missing \"m\" frame for \"message\" event", state)
+                    else
+                    Registry.broadcast(%{"e"=>"wss:message", "p"=>%{"m"=>m}})
+                    send_resp(%{"e"=>"wss:ack", "t"=>"message", "m"=>"OK"}, state)
+                    end
+                  _ -> close_conn(1002, "Unsupported event", state)
+                end
               _ ->
                 close_conn(1002, "Unsupported protocol", state)
             end
