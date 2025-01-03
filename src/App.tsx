@@ -58,7 +58,7 @@ const token = cookies["_auth_token"];
             <p className="loading-text">Connecting to Gateway</p>
           </div>
           {showConnectionProblemLink && (
-            <a href="https://discord.gg/Nr2zG7rUB7" className="connection-problem-link">
+            <a href="https://support.tictactox.online" className="connection-problem-link">
               Connection Problems? Contact Us
             </a>
           )}
