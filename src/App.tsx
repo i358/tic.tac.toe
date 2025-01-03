@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './styles/main.scss';
 import { WS } from './utils/websocket';
 import { asyncTimeout } from './utils/gameUtils';
+import { useCookies } from 'react-cookie';
+import Auth from './components/auth/Auth';
 
 function App() {
+  const [cookies] = useCookies()
   const [ws_connected, setWSConnected] = useState<boolean>(false);
   const [connectionTimeout, setConnectionTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [showConnectionProblemLink, setShowConnectionProblemLink] = useState<boolean>(false);
@@ -11,6 +14,7 @@ function App() {
   const particles = Array.from({ length: 50 }, (_, i) => (
     <div key={`particle-${i}`} className="particle" />
   ));
+
 
   useEffect(() => {
     WS.on("connect", async() => {
@@ -31,11 +35,13 @@ function App() {
     setConnectionTimeout(setTimeout(() => {
       setShowConnectionProblemLink(true);
     }, 10000));
-
     return () => {
       clearTimeout(connectionTimeout!);
     };
   }, []);
+
+  
+const token = cookies["_auth_token"];
 
   return (
     <div className="app">
@@ -57,9 +63,7 @@ function App() {
             </a>
           )}
         </div>
-      ) : (
-       <></>
-      )}
+      ) : !token ? (<Auth />) : (<>hi</>) }
     </div>
   );
 }

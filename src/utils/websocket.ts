@@ -38,7 +38,6 @@ class WebSocketManager {
     private startPing(): void {
       this.ping = setInterval(() => {
         this.ws?.send(JSON.stringify({ e: "heartbeat" }));
-        console.log("sent ping");
       }, this.timeout);
     }
   
@@ -89,10 +88,11 @@ class WebSocketManager {
   
     private handleMessage(message: MessageEvent): void {
       const data = JSON.parse(message.data);
-      if (data["e"] === "server_hello") {
+      if (data["e"] == "server_hello") {
         console.log("WebSocket connection established");
         this.timeout = data["heartbeat_interval"];
         this.emit("connect", data);
+        this.startPing();
       } else {
         this.emit("message", data);
       }
