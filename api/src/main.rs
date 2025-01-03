@@ -29,10 +29,6 @@ use tokio::net::TcpListener;
 #[tokio::main]
 async fn main() -> Result<()> {
 
-  for (key, value) in env::vars() {
-    println!("{}: {}", key, value);
-}
-
 
   let port: u16 = env::var("PORT")?.parse::<u16>()?;
   let addr = SocketAddr::from(([0, 0, 0, 0], port));
