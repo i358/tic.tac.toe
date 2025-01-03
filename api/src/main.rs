@@ -29,9 +29,8 @@ use tokio::net::TcpListener;
 #[tokio::main]
 async fn main() -> Result<()> {
 
-  match dotenvy::dotenv() {
-    Ok(path) => println!("Loaded .env file from {:?}", path),
-    Err(e) => println!("Failed to load .env file: {:?}", e),
+  for (key, value) in env::vars() {
+    println!("{}: {}", key, value);
 }
 
 
