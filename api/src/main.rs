@@ -58,7 +58,7 @@ async fn main() -> Result<()> {
 
   fn test() -> Result<(StatusCode, Json<Value>), (StatusCode, Json<Value>)> {
     Ok(
-      send_resp(Response { s: StatusCode::OK, t: "ok", m: "ok", e: "ok" })
+      send_resp(Response { s: StatusCode::OK, t: Some("hi"), m: None, e: None })
     )
   }
 
