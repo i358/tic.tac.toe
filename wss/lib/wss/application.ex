@@ -17,7 +17,7 @@ defmodule Wss.Application do
   defp dispatch do
     [
       {:_, [
-        {"/ws", WssApp.Socket, []}
+        {"/", WssApp.Socket, []}
       ]}
     ]
   end
