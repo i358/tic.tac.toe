@@ -8,6 +8,6 @@ pub struct ReturningResponse {
 pub struct Response {
   pub s: StatusCode,
   pub t: Option<&'static str>,
-  pub m: Option<&'static str>,
+  pub p: Option<&'static str>,
   pub e: Option<&'static str>
 }

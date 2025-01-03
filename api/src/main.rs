@@ -22,7 +22,7 @@ use tower_http::cors::{Any, CorsLayer};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
-use sqlx::{postgres::PgPoolOptions, PgPool, Value};
+use sqlx::{postgres::PgPoolOptions, PgPool};
 
 use tokio::net::TcpListener;
 
@@ -30,12 +30,15 @@ use tokio::net::TcpListener;
 async fn main() -> Result<()> {
   match dotenvy::dotenv() {
     Ok(path) => println!("Loaded .env file from {:?}", path),
-    Err(e) => (),
+    Err(_) => (),
   }
 
   let port: u16 = env::var("PORT")?.parse::<u16>()?;
-  let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
+  let addr = SocketAddr::from(([0, 0, 0, 0], port));
   let database_url = env::var("DATABASE_URL")?;
+  let static_site_url = env::var("STATIC_SITE_URL")?;
+  let gateway = env::var("GATEWAY_URI")?;
+  let self_uri = env::var("GATEWAY_API_URL")
 
   let pool = PgPoolOptions::new()
     .max_connections(80)
@@ -56,9 +59,9 @@ async fn main() -> Result<()> {
     Redirect::temporary(target_url)
   };
 
-  fn test() -> Result<(StatusCode, Json<Value>), (StatusCode, Json<Value>)> {
+  async fn test() -> Result<(StatusCode, Json<Value>), (StatusCode, Json<Value>)> {
     Ok(
-      send_resp(Response { s: StatusCode::OK, t: Some("hi"), m: None, e: None })
+      send_resp(Response { s: StatusCode::OK, t: None, p: Some("test"), e: None })
     )
   }
 
