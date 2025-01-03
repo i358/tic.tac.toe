@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Game from './components/Game';
 import './styles/main.scss';
 import { WS } from './utils/websocket';
 import { asyncTimeout } from './utils/gameUtils';
@@ -9,7 +8,6 @@ function App() {
   const [connectionTimeout, setConnectionTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [showConnectionProblemLink, setShowConnectionProblemLink] = useState<boolean>(false);
 
-  // Generate particles
   const particles = Array.from({ length: 50 }, (_, i) => (
     <div key={`particle-${i}`} className="particle" />
   ));
@@ -60,7 +58,7 @@ function App() {
           )}
         </div>
       ) : (
-        <Game />
+       <></>
       )}
     </div>
   );
