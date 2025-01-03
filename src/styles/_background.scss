@@ -1,0 +1,62 @@
+body {
+background: linear-gradient(45deg, #142850, #27478f, #355fb8, #514fb8, #623fc8, #764ae8, #8e5afc);
+
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@for $i from 1 through 50 {
+  .particle:nth-child(#{$i}) {
+    $size: random(5) + 2px;
+    width: $size;
+    height: $size;
+    animation: moveParticle-#{$i} #{random(10) + 5}s linear infinite;
+    opacity: random(8) / 10;
+    top: random(100) * 1%;
+    left: random(100) * 1%;
+  }
+
+  @keyframes moveParticle-#{$i} {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(#{random(300) - 150}px, #{random(300) - 150}px) rotate(360deg);
+    }
+  }
+} 

@@ -9,6 +9,11 @@ function App() {
   const [connectionTimeout, setConnectionTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [showConnectionProblemLink, setShowConnectionProblemLink] = useState<boolean>(false);
 
+  // Generate particles
+  const particles = Array.from({ length: 50 }, (_, i) => (
+    <div key={`particle-${i}`} className="particle" />
+  ));
+
   useEffect(() => {
     WS.on("connect", async() => {
       await asyncTimeout(1500);
@@ -35,7 +40,8 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="app">
+      {particles}
       {!ws_connected ? (
         <div className="loading-screen">
           <div className="loading-animation">
@@ -59,5 +65,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
