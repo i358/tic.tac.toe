@@ -11,7 +11,7 @@ use std::{env, net::SocketAddr};
 use anyhow::Result;
 
 use axum::{
-  extract::{Path, State},
+  extract::{State},
   http::{Method, StatusCode},
   response::Html,
   routing::{get, patch, post},
