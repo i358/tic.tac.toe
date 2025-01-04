@@ -83,7 +83,7 @@ impl Gateway {
   ) -> Result<(), GatewayError> {
     let mut write_lock = write.lock().await;
     write_lock
-      .send(Message::Text(json!({"e":"heartbeat"}).to_string()))
+      .send(Message::Text(json!({"e":"heartbeat"}).to_string().into()))
       .await?;
     println!("Ping sent");
     Ok(())
