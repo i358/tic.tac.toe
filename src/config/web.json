@@ -1,3 +1,4 @@
 {
-    "WebSocketURI": "wss://gateway.tictactox.online/"
+    "WebSocketURI": "wss://gateway.tictactox.online/",
+    "API_URI": "https://api.tictactox.online"
 }
