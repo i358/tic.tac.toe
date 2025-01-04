@@ -6,23 +6,15 @@ edition = "2021"
 [dependencies]
 
 # server
-axum = "0.8.1"
-tokio = { version = "1.42.0", features = ["full"] }
-tower-http = { version = "0.6.2", features = ["cors"] }
-reqwest = { version = "0.12.12", features = ["json"] }
-
-# database
-sqlx = {version = "0.8.2", features = ["postgres", "runtime-tokio", "tls-native-tls", "macros"]}
-
-# json
-serde = {version = "1.0.216", features = ["derive"]}
-serde_json = "1.0.133"
-
-# env 
-dotenvy = "0.15.7"
-
-# error catching 
-anyhow = "1.0.94"
-
-# other
-chrono = "0.4.39"
+tokio = { version = "1.0", features = ["full"] }
+tokio-tungstenite = { version = "0.20", features = ["native-tls"] }
+futures-util = "0.3"
+axum = "0.7"
+tower-http = { version = "0.5", features = ["cors"] }
+sqlx = { version = "0.7", features = ["postgres", "runtime-tokio"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+url = "2.4"
+anyhow = "1.0"
+thiserror = "1.0"
+dotenvy = "0.15"

@@ -18,11 +18,11 @@ defmodule WssApp.Socket do
     # TODO ^ Add Auth Middleware
 
     IO.puts("Client #{state.client_id} connected. Waiting for authentication")
-    close_conn(1013, "Socket gateway deprecated until new version is available", state)
-    # send_resp(
-    #   %{"e" => "server_hello", "t" => nil, "heartbeat_interval" => 14405, "m" => "Connection Established."},
-    #   state
-    # )
+    # close_conn(1013, "Socket gateway deprecated until new version is available", state)
+    send_resp(
+      %{"e" => "server_hello", "t" => nil, "heartbeat_interval" => 14405, "m" => "Connection Established."},
+      state
+    )
   end
 
   def websocket_handle({:text, message}, state) do
