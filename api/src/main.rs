@@ -36,9 +36,9 @@ async fn main() -> Result<()> {
   let port: u16 = env::var("PORT")?.parse::<u16>()?;
   let addr = SocketAddr::from(([0, 0, 0, 0], port));
   let database_url = env::var("DATABASE_URL")?;
-  let static_site_url = env::var("STATIC_SITE_URL")?;
-  let gateway = env::var("GATEWAY_URI")?;
-  let self_uri = env::var("GATEWAY_API_URL")
+  let _static_site_url = env::var("STATIC_SITE_URL")?;
+  let _gateway = env::var("GATEWAY_URI")?;
+  let _self_uri = env::var("GATEWAY_API_URL");
 
   let pool = PgPoolOptions::new()
     .max_connections(80)
@@ -54,20 +54,8 @@ async fn main() -> Result<()> {
     .allow_methods(vec![Method::GET, Method::POST, Method::PUT, Method::DELETE])
     .allow_headers(Any);
 
-  let redirect_handler = |uri: Uri| async move {
-    let target_url = "https://tictactox.online";
-    Redirect::temporary(target_url)
-  };
-
-  async fn test() -> Result<(StatusCode, Json<Value>), (StatusCode, Json<Value>)> {
-    Ok(
-      send_resp(Response { s: StatusCode::OK, t: None, p: Some("test"), e: None })
-    )
-  }
-
   let index = Router::new()
     .with_state(pool)
-    .route("/", get(test))
     .layer(cors);
 
   serve(listener, index).await?;
