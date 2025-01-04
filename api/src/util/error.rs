@@ -8,6 +8,12 @@ pub enum GatewayError {
   #[error("Connection error: {0}")]
   Connection(#[from] std::io::Error),
 
+  #[error("Gateway already initialized")]
+  AlreadyInitialized,
+
+  #[error("Gateway not initialized")]
+  NotInitialized,
+
   #[error("Other error: {0}")]
   Other(String),
 }

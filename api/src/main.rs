@@ -3,7 +3,8 @@ mod util;
 mod structs;
 use server::Server;
 use util::*;
-
+use url::Url;
+mod routes;
 use anyhow::Result;
 use config::Config;
 use gateway::Gateway;
@@ -12,8 +13,12 @@ use gateway::Gateway;
 async fn main() -> Result<()> {
   let config = Config::new()?;
   println!("Configuration loaded");
+  
+  let gateway_uri = config.gateway_uri.as_str();
+  let ws_uri = Url::parse(&gateway_uri)?;
 
-  let _gateway = Gateway::new(&config.gateway_uri).await?;
+  Gateway::initialize(&ws_uri).await?;
+
   println!("Gateway initialized");
 
   let server = Server::new(&config).await?;

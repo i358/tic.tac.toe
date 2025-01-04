@@ -12,7 +12,9 @@ use tokio_tungstenite::{
   connect_async, tungstenite::protocol::Message, MaybeTlsStream, WebSocketStream,
 };
 use url::Url;
+use std::sync::OnceLock;
 
+static GATEWAY: OnceLock<Gateway> = OnceLock::new();
 pub struct Gateway {
   write: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
 }
@@ -88,4 +90,21 @@ impl Gateway {
     println!("Ping sent");
     Ok(())
   }
+
+  pub fn instance() -> &'static Gateway {
+    GATEWAY.get().expect("Gateway is not initialized")
+}
+
+pub async fn send_message(&self, message: String) -> Result<(), GatewayError> {
+    let mut write = self.write.lock().await;
+    write.send(Message::Text(message.into())).await?;
+    Ok(())
+}
+
+pub async fn initialize(ws_uri: &Url) -> Result<(), GatewayError> {
+    let gateway = Self::new(ws_uri).await?;
+    GATEWAY.set(gateway).map_err(|_| GatewayError::AlreadyInitialized)?;
+    Ok(())
+}
+
 }
